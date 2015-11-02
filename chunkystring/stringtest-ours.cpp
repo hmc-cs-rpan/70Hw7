@@ -12,7 +12,7 @@
  * implementation that someone else used, but in later assignments, you'll
  * set the value to zero to use your own.
  */
-#define LOAD_GENERIC_STRING 1       // 0 = Normal, 1 = Load Code Dynamically
+#define LOAD_GENERIC_STRING 0       // 0 = Normal, 1 = Load Code Dynamically
 #endif
 
 #if LOAD_GENERIC_STRING
