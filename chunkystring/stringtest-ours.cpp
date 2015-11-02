@@ -12,12 +12,12 @@
  * implementation that someone else used, but in later assignments, you'll
  * set the value to zero to use your own.
  */
-#define LOAD_GENERIC_STRING 1       // 0 = Normal, 1 = Load Code Dynamically
+#define LOAD_GENERIC_STRING 0       // 0 = Normal, 1 = Load Code Dynamically
 #endif
 
+ #define INSERT_ERASE 0             // 0 = Do not test, 1 = do test
+
 #if LOAD_GENERIC_STRING
-#include "string-wrapper.hpp"       // Use dynamic loading magic!
-using TestingString = GenericString;
 #else
 #include "chunkystring.hpp"         // Just include and link as normal.
 using TestingString = ChunkyString;
@@ -522,6 +522,7 @@ TEST(utilization, hello)
     checkUtilization(test, 2, "testing utilization using push_back");
 }
 
+#if INSERT_ERASE
 TEST(insert, one_char_at_start)
 {
     TestingString test;
@@ -610,6 +611,7 @@ TEST(erase, push_two_erase_two)
     checkWithControl(test, control, "check erase all");
 
 }
+#endif
 
 TEST(operator_plus, empty)
 {
@@ -761,6 +763,7 @@ TEST(iterator, dereferencing)
     EXPECT_EQ(*a, *b);
 }
 
+#if INSERT_ERASE
 TEST(utilization, only_insert)
 {
     TestingString test;
@@ -897,7 +900,7 @@ TEST(utilization, insert_250_erase_200)
     }
     checkUtilization(test, 4, "checking utilization insert_250_erase_200");
 }
-
+#endif
 
 
 //--------------------------------------------------
