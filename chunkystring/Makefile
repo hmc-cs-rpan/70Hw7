@@ -31,6 +31,12 @@ stringtest:	$(STRINGTEST_OBJS)
 	$(CXX) $(LDFLAGS) $(CXXFLAGS) -o $@ -lpthread $(STRINGTEST_OBJS) \
 		$(LIBS) $(GTEST_LIB)
 
+stringtest-ours: $(STRINGTEST_OBJS)
+	$(CXX) $(LDFLAGS) $(CXXFLAGS) -o $@ -lpthread $(STRINGTEST_OBJS) \
+		$(LIBS) $(GTEST_LIB)
+
+test: stringtest.ours
+
 clean:
 	rm -f $(TARGETS) $(ALL_OBJS)
 
