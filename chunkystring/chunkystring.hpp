@@ -1,7 +1,7 @@
 /**
  * \file chunkystring.hpp
  *
- * \authors CS 70 given code, with additions by ... your names here ...
+ * \authors CS 70 given code, with additions by Ricky Pan, Iris Liu
  *
  * \brief Declares the ChunkyString class.
  */
@@ -140,9 +140,28 @@ public:
     double utilization() const;
 
 private:
-    // TODO: Add declaration and documentation for Chunk.
 
-    // TODO: Add private data members for ChunkyString
+    /***
+     * \struct Chunk
+     *
+     * \brief The string is stored as a linked-list of Chunks.
+     *        The class is private so only ChunkyString knows about it.
+     *
+     */
+    struct Chunk {
+       size_t length_;
+       char chars_[CHUNKSIZE];
+
+       Chunk(size_t length_, char chars_[CHUNKSIZE]);
+
+       Chunk() = delete;
+       Chunk(const Chunk&) = delete;
+       Chunk& operator=(const Chunk&) = delete;
+       ~Chunk() = default;
+
+    };
+
+    size_t size_; // Current size of ChunkyString
 
     /**
      * \class Iterator
@@ -196,11 +215,13 @@ private:
         bool operator==(const Iterator& rhs) const;
         bool operator!=(const Iterator& rhs) const;
 
+
     private:
         friend class ChunkyString;
+        Iterator(char* curr_);
+        char* curr_;
+        char* prev_;
 
-        // TODO: Private constructor, called by begin() and end() ... ?
-        // TODO: Private data ...?
     };
 };
 
