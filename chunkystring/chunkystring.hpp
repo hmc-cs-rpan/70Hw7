@@ -162,6 +162,8 @@ private:
     };
 
     size_t size_; // Current size of ChunkyString
+    Chunk* back_; // Last chunk of ChunkyString
+    Chunk* front_; // First chunk of ChunkyString
 
     /**
      * \class Iterator
@@ -203,7 +205,9 @@ private:
         using pointer = typename std::conditional<const_iter, 
                                                   const value_type*, 
                                                   value_type*>::type;
-
+        using list_iterator_type = typename std::conditional<const_iter, 
+                                        std::list<Chunk>::const_iterator, 
+                                        std::list<Chunk>::iterator>::type;
         using difference_type   = ptrdiff_t;
         using iterator_category = std::bidirectional_iterator_tag;
         using const_reference   = const value_type&;
@@ -218,9 +222,10 @@ private:
 
     private:
         friend class ChunkyString;
-        Iterator(char* curr_);
-        char* curr_;
-        char* prev_;
+        Iterator(Chunk* currChunk_, int charInd_);
+        std::list<Chunk>
+        Chunk* currChunk_;
+        int charInd_;
 
     };
 };
