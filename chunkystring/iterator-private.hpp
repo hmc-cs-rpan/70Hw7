@@ -11,43 +11,81 @@
 template <bool const_it>
 ChunkyString::Iterator<const_it>::Iterator()
 {
-    throw std::logic_error("Not yet implemented");
+    // Nothing to do here..
+}
+
+// Special constructor to keep track of both Chunk and charIndex
+template <bool const_it>
+ChunkyString::Iterator<const_it>::Iterator(std::list<Chunk>::iterator chunk,
+											 int charIndex)
+{
+    chunk_ = chunk;
+    charInd_ = charIndex;
 }
 
 template <bool const_it>
 ChunkyString::Iterator<const_it>::Iterator(const Iterator<false>& i)
+	: Iterator{i.chunk_, i.charInd_}
 {
-    throw std::logic_error("Not yet implemented");
+    // Nothing to do here!
 }
 
 template <bool const_it>
 ChunkyString::Iterator<const_it>& ChunkyString::Iterator<const_it>::operator++()
 {
-    throw std::logic_error("Not yet implemented");
+    // sets the iterator to point to the next char in the ChunkyString
+
+	// case for iterator points to last char in Chunk
+	if(charInd_ == chunk_->length_-1)
+	{
+		// set iterator to point to first char of next Chunk
+		// if iterator pointed to last char, it will be equal to the
+		// end iterator
+		++chunk_;
+		charInd_ = 0;
+	}
+	else
+	{
+		++charInd_;
+	} 
 }
 
 template <bool const_it>
-ChunkyString::Iterator<const_it>& ChunkyString::Iterator<const_it>::operator--()
+ChunkyString::Iterator<const_it>& 
+	ChunkyString::Iterator<const_it>::operator--()
 {
-    throw std::logic_error("Not yet implemented");
+    // sets the iterator to point to the previous char in ChunkyString
+
+	if (charInd_ == 0)
+	{
+		--chunk_;
+		charInd_ = chunk_->length_-1;
+	}
+	else
+	{
+		--charInd_;
+	}
 }
 
 template <bool const_it>
 typename ChunkyString::Iterator<const_it>::reference 
     ChunkyString::Iterator<const_it>::operator*() const
 {
-    throw std::logic_error("Not yet implemented");
+    // Return the char curr_ points to
+	return chunk_->chars_[charInd_];
 }
 
 template <bool const_it>
 bool ChunkyString::Iterator<const_it>::operator==(const Iterator& rhs) const
 {
-    throw std::logic_error("Not yet implemented");    
+	// Checks if two iterators hold the same Chunk address and same
+	// location within the array
+    return chunk_ == rhs.chunk_ && charInd_ == rhs.charInd_;  
 }
 
 template <bool const_it>
 bool ChunkyString::Iterator<const_it>::operator!=(const Iterator& rhs) const
 {
-    throw std::logic_error("Not yet implemented");
+	// leverage == to implement !=
+    return !(*this == rhs); 
 }
-

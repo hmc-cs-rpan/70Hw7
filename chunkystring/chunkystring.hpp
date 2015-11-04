@@ -33,6 +33,8 @@ class ChunkyString {
     // Forward declaration of private class.
     template <bool const_iter>
     class Iterator;
+    struct Chunk;
+
 
 public:
     // Standard STL container type definitions
@@ -52,7 +54,12 @@ public:
      *
      * \note constant time
      */
-    ChunkyString();
+    ChunkyString() = delete;
+
+    /**
+     * \brief Copy constructor
+     */
+    ChunkyString(const ChunkyString& orig);
 
     // TODO: Are the synthesized copy constructor, assignment operator, and 
     //       destructor okay, or should we define our own?
@@ -76,8 +83,10 @@ public:
      */
     void push_back(char c);
 
-    // Standard string functions: size, append, equality, less than    
+    // Standard string functions: size, CHUNKSIZE, append, equality, less than    
     size_t size() const;    ///< String size \note constant time
+    std::list<Chunk> chunks_;
+    const size_t CHUNKSIZE = 12;
 
     ChunkyString& operator+=(const ChunkyString& rhs); ///< String concatenation
 
@@ -150,9 +159,9 @@ private:
      */
     struct Chunk {
        size_t length_;
-       char chars_[CHUNKSIZE];
+       char[] chars_;
 
-       Chunk(size_t length_, char chars_[CHUNKSIZE]);
+       Chunk(size_t length_, char[] chars_);
 
        Chunk() = delete;
        Chunk(const Chunk&) = delete;
@@ -162,8 +171,7 @@ private:
     };
 
     size_t size_; // Current size of ChunkyString
-    Chunk* back_; // Last chunk of ChunkyString
-    Chunk* front_; // First chunk of ChunkyString
+
 
     /**
      * \class Iterator
@@ -222,9 +230,9 @@ private:
 
     private:
         friend class ChunkyString;
-        Iterator(Chunk* currChunk_, int charInd_);
-        std::list<Chunk>
-        Chunk* currChunk_;
+        // Special constructor with charIndex
+        Iterator(std::list<Chunk>::iterator chunk_, int charInd_);
+        std::list<Chunk>::iterator chunk_;
         int charInd_;
 
     };

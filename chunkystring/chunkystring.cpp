@@ -8,13 +8,17 @@
 
 #include <cstddef>
 #include <cassert>
+#include <list>
 
 using namespace std;
 
-ChunkyString::ChunkyString(): size_(0), front_(nullptr), back_()
-{
-	chunks_ = std::list<Chunk>;
-}
+#define CHUNKSIZE 12
+
+// ChunkyString::ChunkyString()
+// 	: size_{0}
+// {
+// 	chunks_ = std::list<Chunk>;
+// }
 
 ChunkyString::ChunkyString(const ChunkyString& orig)
 {
@@ -34,120 +38,117 @@ ChunkyString::~ChunkyString()
 	// delete empty chunks after removing each char from the chunk's char[]
 	while(size_ != 0)
 	{
-		if (this.back().length_ == 0)
+		if (chunks_.back().length_ == 0)
 		{
-			delete this.back()
+			delete chunks_.back()
 		}
 		else
 		{
 			// decrease the length of the last chunk by one, leaving it behind
 			// decrement size_
-			--this.back().length_;
+			--chunks_.back().length_;
 			--size_;
 		}
 
 	}
 }
 
-ChunkyString::iterator ChunkyString::begin() const
+ChunkyString::iterator ChunkyString::begin() 
 {
-	// if empty, return Iterator(nullptr,-1). This will be the convention
-	// to describe and empty ChunkyString's iterator
-	if(this.empty())
+	return Iterator(chunks_.begin(), 0);
+}
+
+ChunkyString::iterator ChunkyString::end() 
+{
+	return Iterator(chunks_.end(), 0)	
+}
+
+ChunkyString::const_iterator ChunkyString::begin() const
+{
+	return Iterator(chunks_.begin(), 0);
+}
+
+ChunkyString::const_iterator ChunkyString::end() const
+{
+	return Iterator(chunks_.end(), 0)	
+}
+
+ChunkyString& ChunkyString::operator+=(const ChunkyString& rhs)
+{
+	ChunkyString deepCopy = ChunkyString(rhs);
+
+	// push_back each char from the deepCopy of rhs
+	for (Iterator i = deepCopy.begin(); i != deepCopy.end(); ++i)
 	{
-		return Iterator(nullptr, -1);
+		this.push_back(*i);
+	}
+
+	// prevent memory leak
+	delete deepCopy;
+
+	return *this;
+}
+
+
+void ChunkyString::push_back(char c)
+{
+	// adds a char c to the end of our ChunkyString
+	if (size_ == 0 || chunks_.back().length_ == CHUNKSIZE)
+	{
+		// create a newChunk
+		Chunk newChunk = Chunk(0, chars_[CHUNKSIZE]);
+		// push_back newChunk to our chunks_ list
+		chunks_.(std::list::push_back(newChunk));
+		chunks_.back().chars_[0] = c;
+		chunks_.back().length_ += 1;
 	}
 	else
 	{
-		// return pointer to first element of first Chunk
-		return Iterator(this.front(), 0);
+		// place in next available array index
+		size_t nextInd = chunks_.back().length_;
+		chunks_.back().chars_[nextInd] = c;
+		chunks_.back().length_ += 1;
 	}
+
+	++size_;
 	
 }
 
-ChunkyString::iterator ChunkyString::end() const
+bool ChunkyString::operator==(const ChunkyString& rhs) const
 {
-	// see begin() for empty case
-	if(this.empty())
+	if(size_ != rhs.size_)
 	{
-		return Iterator(nullptr, -1);
+		return false;
 	}
-	else
+
+	// Initializes 1 iterator to loop through each ChunkyString
+	Iterator a = this.begin();
+	Iterator b = rhs.begin();
+
+	for(size_t i = 0; i < size_; ++i)
 	{
-		// Iterator(nullptr, 0) will be the convention for the end()
-		// iterator.
-		return Iterator(nullptr, 0);
-	}	
-}
-
-// --------------------------------------------
-// Implementation of ChunkyString::Iterator
-// --------------------------------------------
-//
-ChunkyString::Iterator::Iterator(Chunk* chunk, int index)
-	: currChunk_{chunk}, charInd_{index}
-{
-	// Nothing to do here
-}
-
-ChunkyString::Iterator& ChunkyString::Iterator::operator++()
-{
-	// sets the iterator to point to the next char in the ChunkyString
-
-	// case for iterator points to last char in Chunk
-	if(charInd_ = currChunk_->length_-1)
-	{
-		// set iterator to point to first char of next Chunk
-		// if iterator pointed to last char, it will be equal to the
-		// end iterator
-		currChunk_ = currChunk_.next();
-		charInd_ = 0;
-	}
-	else
-	{
-		++charInd_;
-	}
-}
-
-ChunkyString::Iterator& ChunkyString::Iterator::operator--()
-{
-	// sets the iterator to point to the previous char in ChunkyString
-
-	// test for empty ChunkyString
-	if(currChunk_ == nullptr)
-	{
-		if(charInd_ == -1)
+		if(*a != *b)
 		{
-			cerr << "ChunkyString is empty!" << endl;
+			return false;
 		}
 		else
 		{
-			currChunk_ = 
+			// increments iterators
+			++a;
+			++b;
 		}
 	}
-	else if 
-	// if curr_ = chars_.begin
-	//		then prev chunk
+	return true;
 }
 
-char& ChunkyString::Iterator::operator*() const
+bool ChunkyString::operator!=(const ChunkyString& rhs) const
 {
-	// Return the char curr_ points to
-	return currChunk_->chars_[charInd_];
-}
-
-bool ChunkyString::Iterator::operator==(const Iterator& rhs) const
-{
-	// Checks if two iterators hold the same Chunk address and same
-	// location within the array
-	return currChunk_ == rhs.currChunk_ && charInd_ == rhs.charInd_;
-}
-
-bool ChunkyString::Iterator::operator!=(const Iterator& rhs) const
-{
-	// leverage == to implement !=
+	// Idiomatic code: leverage == to implement !=
 	return !(*this == rhs);
 }
 
-
-
+bool ChunkyString::operator<(const ChunkyString& rhs) const
+{
+	return std::lexicographical_compare(this.begin(), this.end(),
+										 rhs.begin(), rhs.end());
+}
