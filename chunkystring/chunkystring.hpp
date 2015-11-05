@@ -54,7 +54,7 @@ public:
      *
      * \note constant time
      */
-    ChunkyString() = delete;
+    ChunkyString();
 
     /**
      * \brief Copy constructor
@@ -158,15 +158,17 @@ private:
      *
      */
     struct Chunk {
-       size_t length_;
-       char[] chars_;
 
-       Chunk(size_t length_, char[] chars_);
+       size_t length_;
+       char chars_[12];
+
+       Chunk(size_t length_, char chars_[12]);
 
        Chunk() = delete;
        Chunk(const Chunk&) = delete;
        Chunk& operator=(const Chunk&) = delete;
        ~Chunk() = default;
+
 
     };
 
