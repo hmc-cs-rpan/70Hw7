@@ -25,7 +25,7 @@
 
 
 #if LOAD_GENERIC_STRING
-#include "string-wrapper.hpp"       // Use dynamic loading magic!
+// #include "string-wrapper.hpp"       // Use dynamic loading magic!
 typedef GenericString TestingString;
 #else
 #include "chunkystring.hpp"         // Just include and link as normal.
@@ -91,7 +91,7 @@ static int maybeRandomInt(int maximum, randomness_t choice)
 /// Returns a random character, using the maybeRandomInt function.
 static char randomChar()
 {
-    return maybeRandomInt(256, RANDOM_VALUE);
+    return maybeRandomInt(127, RANDOM_VALUE);
 }
 
 /**

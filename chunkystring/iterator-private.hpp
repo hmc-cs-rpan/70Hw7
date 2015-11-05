@@ -14,10 +14,9 @@ ChunkyString::Iterator<const_it>::Iterator()
     // Nothing to do here..
 }
 
-// Special constructor to keep track of both Chunk and charIndex
 template <bool const_it>
-ChunkyString::Iterator<const_it>::Iterator(std::list<Chunk>::iterator chunk,
-											 int charIndex)
+ChunkyString::Iterator<const_it>::Iterator(list_iterator_type chunk,
+											 size_t charIndex)
 {
     chunk_ = chunk;
     charInd_ = charIndex;
@@ -25,7 +24,7 @@ ChunkyString::Iterator<const_it>::Iterator(std::list<Chunk>::iterator chunk,
 
 template <bool const_it>
 ChunkyString::Iterator<const_it>::Iterator(const Iterator<false>& i)
-	: Iterator{i.chunk_, i.charInd_}
+	: chunk_{i.chunk_}, charInd_{i.charInd_}
 {
     // Nothing to do here!
 }
@@ -48,6 +47,7 @@ ChunkyString::Iterator<const_it>& ChunkyString::Iterator<const_it>::operator++()
 	{
 		++charInd_;
 	} 
+	return *this;
 }
 
 template <bool const_it>
@@ -65,6 +65,7 @@ ChunkyString::Iterator<const_it>&
 	{
 		--charInd_;
 	}
+	return *this;
 }
 
 template <bool const_it>

@@ -1,7 +1,7 @@
 /**
  * \file chunkystring.hpp
  *
- * \authors CS 70 given code, with additions by Ricky Pan, Iris Liu
+ * \authors CS 70 given code, with additions by ... your names here ...
  *
  * \brief Declares the ChunkyString class.
  */
@@ -33,8 +33,6 @@ class ChunkyString {
     // Forward declaration of private class.
     template <bool const_iter>
     class Iterator;
-    struct Chunk;
-
 
 public:
     // Standard STL container type definitions
@@ -56,13 +54,12 @@ public:
      */
     ChunkyString();
 
+    ~ChunkyString() = default;
+
     /**
      * \brief Copy constructor
      */
     ChunkyString(const ChunkyString& orig);
-
-    // TODO: Are the synthesized copy constructor, assignment operator, and 
-    //       destructor okay, or should we define our own?
 
     /// Return an iterator to the first character in the ChunkyString.
     iterator begin();
@@ -83,11 +80,10 @@ public:
      */
     void push_back(char c);
 
-    // Standard string functions: size, CHUNKSIZE, append, equality, less than    
+    // Standard string functions: size, append, equality, less than    
     size_t size() const;    ///< String size \note constant time
-    std::list<Chunk> chunks_;
-    const size_t CHUNKSIZE = 12;
-
+    static const size_t CHUNKSIZE = 12;
+    
     ChunkyString& operator+=(const ChunkyString& rhs); ///< String concatenation
 
     bool operator==(const ChunkyString& rhs) const;    ///< String equality
@@ -149,7 +145,6 @@ public:
     double utilization() const;
 
 private:
-
     /***
      * \struct Chunk
      *
@@ -160,20 +155,15 @@ private:
     struct Chunk {
 
        size_t length_;
-       char chars_[12];
+       char chars_[CHUNKSIZE];
 
-       Chunk(size_t length_, char chars_[12]);
+       Chunk(size_t length_, size_t CHUNKSIZE);
 
-       Chunk() = delete;
-       Chunk(const Chunk&) = delete;
-       Chunk& operator=(const Chunk&) = delete;
-       ~Chunk() = default;
-
-
+       Chunk& operator=(const Chunk&);
     };
 
+    std::list<Chunk> chunks_; 
     size_t size_; // Current size of ChunkyString
-
 
     /**
      * \class Iterator
@@ -203,6 +193,7 @@ private:
 
         ///< Convert a non-const iterator to a const-iterator, if necessary
         Iterator(const Iterator<false>& i);  
+
    
         // TODO: Do we need more constuctors? A destructor? 
         //       An assignment operator?
@@ -216,8 +207,8 @@ private:
                                                   const value_type*, 
                                                   value_type*>::type;
         using list_iterator_type = typename std::conditional<const_iter, 
-                                        std::list<Chunk>::const_iterator, 
-                                        std::list<Chunk>::iterator>::type;
+                                    std::list<Chunk>::const_iterator, 
+                                    std::list<Chunk>::iterator>::type;
         using difference_type   = ptrdiff_t;
         using iterator_category = std::bidirectional_iterator_tag;
         using const_reference   = const value_type&;
@@ -229,14 +220,12 @@ private:
         bool operator==(const Iterator& rhs) const;
         bool operator!=(const Iterator& rhs) const;
 
-
     private:
         friend class ChunkyString;
-        // Special constructor with charIndex
-        Iterator(std::list<Chunk>::iterator chunk_, int charInd_);
-        std::list<Chunk>::iterator chunk_;
-        int charInd_;
-
+        friend struct Chunk;
+        Iterator(list_iterator_type chunk_, size_t charInd_);
+        list_iterator_type chunk_;
+        size_t charInd_;
     };
 };
 

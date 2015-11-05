@@ -15,7 +15,7 @@
 #define LOAD_GENERIC_STRING 0       // 0 = Normal, 1 = Load Code Dynamically
 #endif
 
- #define INSERT_ERASE 0             // 0 = Do not test, 1 = do test
+#define INSERT_ERASE 0             // 0 = Do not test, 1 = do test
 
 #if LOAD_GENERIC_STRING
 #else
@@ -126,7 +126,7 @@ void checkDeepCopy(TestingString& test, const TestingString& copy,
     size_t pos = maybeRandomInt(test.size() - 1, RANDOM_VALUE);
     TestingString::iterator tIter = test.begin();
     std::advance(tIter, pos);
-    TestingString::iterator cIter = copy.begin();
+    TestingString::const_iterator cIter = copy.begin();
     std::advance(cIter, pos);
 
     // Select a random character that is not the same as the existing one
@@ -306,7 +306,7 @@ void checkBothIdentical(const TestingString& first, const TestingString& second,
  */
 void checkIterWithControl(
             const TestingString& test,            const string& control,
-            const TestingString::iterator& tIter, const string::iterator& cIter,
+            const TestingString::const_iterator& tIter, const string::iterator& cIter,
             string origin)
 {
     string backtrace = "Backtrace: " + origin;
@@ -318,32 +318,6 @@ void checkIterWithControl(
 
     // Check this AFTER iterator checks, so iterators are not invalidated
     checkWithControl(test, control, origin);
-}
-/**
- * \brief Compare a TestingString and a TestingString iterator with expected
- *        values.
- *
- * \details Tests iterator inequality 
- *
- * \param test          TestingString to check
- * \param control       Expected value of test
- * \param tIter         TestingString iterator to check
- * \param cIter         Expected value of tIter
- * \param origin        Description of the calling function, to assist the
- *                      user in tracing back an error.
- */
-void checkIterInequalityWithControl(
-            const TestingString& test,            const string& control,
-            const TestingString::iterator& tIter, const string::iterator& cIter,
-            string origin)
-{
-    string backtrace = "Backtrace: " + origin;
-    EXPECT_NE(cIter == control.begin(), tIter == test.begin()) << backtrace;
-    EXPECT_NE(cIter == control.end(), tIter == test.end()) << backtrace;
-
-    if (tIter != test.end())
-        EXPECT_NE(*cIter, *tIter) << backtrace;
-
 }
 
 /**
@@ -731,22 +705,6 @@ TEST(iterator, begin_plus_one_equality)
 
     checkIterWithControl(test, control, a, b, 
         "checking begin_plus_one_equality iterator");
-}
-
-
-TEST(iterator, begin_plus_one_inequality)
-{
-    TestingString test;
-    string control;
-
-    test.push_back('A');
-    control.push_back('B');
-
-    TestingString::iterator a = test.begin();
-    string::iterator b = control.end();
-    
-    checkIterInequalityWithControl(test, control, a, b, 
-        "checking begin_plus_one_inequality iterator");
 }
 
 TEST(iterator, dereferencing)
