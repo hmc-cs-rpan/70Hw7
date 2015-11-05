@@ -7,8 +7,8 @@
 
 # ----- Make Macros -----
 
-CXXFLAGS    =	-g -stdlib=libc++ -std=c++11 -Wall -Wextra -pedantic 
-CXX	    =	clang++
+CXXFLAGS    =   -g -stdlib=libc++ -std=c++11 -Wall -Wextra -pedantic 
+CXX     =   clang++
 
 GTEST_DIR   = gtest
 GTEST_OBJS  = gtest-all.o
@@ -18,17 +18,17 @@ GTEST_OBJS  = gtest-all.o
 # disable its use.
 CPPFLAGS += -I. -DGTEST_HAS_PTHREAD=0
 
-TARGETS 	    =	stringtest stringtest-ours
-STRINGTEST_OBJS     =	chunkystring.o stringtest.o
+TARGETS         =   stringtest stringtest-ours
+STRINGTEST_OBJS     =   chunkystring.o stringtest.o
 STRINGTEST-OURS_OBJS = chunkystring.o stringtest-ours.o
-ALL_OBJS	    =   $(STRINGTEST_OBJS) $(STRINGTEST-OURS_OBJS)
+ALL_OBJS        =   $(STRINGTEST_OBJS) $(STRINGTEST-OURS_OBJS)
 
 
 # ----- Make Rules -----
 
-all:	$(TARGETS)
+all:    $(TARGETS)
 
-stringtest:	$(STRINGTEST_OBJS) $(GTEST_OBJS)
+stringtest: $(STRINGTEST_OBJS) $(GTEST_OBJS)
 	$(CXX) $(LDFLAGS) $(CXXFLAGS) -o $@ -lpthread $(STRINGTEST_OBJS) \
 		$(LIBS) $(GTEST_OBJS)
 
@@ -37,8 +37,8 @@ stringtest-ours: $(STRINGTEST-OURS_OBJS) $(GTEST_OBJS)
 		$(LIBS) $(GTEST_OBJS)
 
 test: stringtest stringtest-ours 
-	./stringtest 
-	./stringtest-ours
+	./stringtest
+	./stringtest-ours 
 
 clean:
 	rm -f $(TARGETS) $(ALL_OBJS)

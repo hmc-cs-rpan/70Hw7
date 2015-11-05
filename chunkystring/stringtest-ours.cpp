@@ -306,8 +306,8 @@ void checkBothIdentical(const TestingString& first, const TestingString& second,
  */
 void checkIterWithControl(
             const TestingString& test,            const string& control,
-            const TestingString::const_iterator& tIter, const string::iterator& cIter,
-            string origin)
+            const TestingString::const_iterator& tIter, 
+            const string::iterator& cIter, string origin)
 {
     string backtrace = "Backtrace: " + origin;
     EXPECT_EQ(cIter == control.begin(), tIter == test.begin()) << backtrace;

@@ -158,8 +158,6 @@ private:
        char chars_[CHUNKSIZE];
 
        Chunk(size_t length_, size_t CHUNKSIZE);
-
-       Chunk& operator=(const Chunk&);
     };
 
     std::list<Chunk> chunks_; 
@@ -193,10 +191,6 @@ private:
 
         ///< Convert a non-const iterator to a const-iterator, if necessary
         Iterator(const Iterator<false>& i);  
-
-   
-        // TODO: Do we need more constuctors? A destructor? 
-        //       An assignment operator?
 
         // Make Iterator STL-friendly with these typedefs:
         using value_type = char;
