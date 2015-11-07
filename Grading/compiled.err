@@ -1,0 +1,10 @@
+chunkystring.cpp:155:16: warning: variable length arrays are a C99 feature [-Wvla-extension]
+    char chars_[CHUNKSIZE]; 
+               ^
+chunkystring.cpp:155:10: warning: unused variable 'chars_' [-Wunused-variable]
+    char chars_[CHUNKSIZE]; 
+         ^
+chunkystring.cpp:152:35: warning: unused parameter 'length' [-Wunused-parameter]
+ChunkyString::Chunk::Chunk(size_t length, size_t CHUNKSIZE)
+                                  ^
+3 warnings generated.
